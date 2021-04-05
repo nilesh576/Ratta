@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddQuestionPage"
+    android:orientation="vertical"
+    android:background="@drawable/linerlayoutbg">
+
+    <androidx.core.widget.NestedScrollView
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/llayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingVertical="20dp">
+
+            <TextView
+                android:padding="10dp"
+                android:text="to use speech to text, long press on text area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/editTextTextPersonName"
+                android:background="@drawable/chapterview"
+                android:textSize="30dp"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:lineSpacingExtra="1dp"
+                android:hint="\ntype question\n" />
+
+            <Space android:layout_width="match_parent" android:layout_height="30dp"/>
+
+            <EditText
+                android:id="@+id/editTextTextPersonName1"
+                android:textSize="30dp"
+                android:padding="10dp"
+                android:background="@drawable/chapterview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:hint="type option 1" />
+
+            <Space android:layout_width="match_parent" android:layout_height="10dp"/>
+
+            <EditText
+                android:id="@+id/editTextTextPersonName2"
+                android:textSize="30dp"
+                android:padding="10dp"
+                android:background="@drawable/chapterview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:hint="type option 2" />
+
+            <Space android:layout_width="match_parent" android:layout_height="10dp"/>
+
+            <EditText
+                android:id="@+id/editTextTextPersonName3"
+                android:textSize="30dp"
+                android:padding="10dp"
+                android:background="@drawable/chapterview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:hint="type option 3" />
+
+            <Space android:layout_width="match_parent" android:layout_height="10dp"/>
+
+            <EditText
+                android:id="@+id/editTextTextPersonName4"
+                android:textSize="30dp"
+                android:padding="10dp"
+                android:background="@drawable/chapterview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:hint="type option 4" />
+
+
+
+            <Space android:layout_width="match_parent" android:layout_height="30dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24dp"
+                android:text="select correct option"/>
+
+            <Space android:layout_width="match_parent" android:layout_height="10dp"/>
+
+            <RadioGroup
+                android:id="@+id/radiogroup"
+                android:background="@drawable/chapterview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="25"
+                    android:text="1" />
+
+                <RadioButton
+                    android:id="@+id/radioButton2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="25"
+                    android:text="2" />
+
+                <RadioButton
+                    android:id="@+id/radioButton3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="25"
+                    android:text="3" />
+
+                <RadioButton
+                    android:id="@+id/radioButton4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="25"
+                    android:text="4" />
+
+            </RadioGroup>
+
+            <Space android:layout_width="match_parent" android:layout_height="30dp"/>
+
+            <Button
+                android:id="@+id/button"
+                android:background="@drawable/buttons_drawables"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FF00AA"
+                android:text="ADD" />
+
+            <EditText
+                android:id="@+id/hash_et"
+                android:textSize="30dp"
+                android:padding="10dp"
+                android:layout_marginVertical="10dp"
+                android:background="@drawable/chapterview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:hint="type hash"/>
+
+        </LinearLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>
