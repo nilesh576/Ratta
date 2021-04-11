@@ -90,7 +90,7 @@ public class ChapterRecViewAdapter extends RecyclerView.Adapter<ChapterRecViewAd
 
                 FileOutputStream fos = null;
                 try {
-                    fos = new FileOutputStream(myExtenalFile);
+                    fos = new FileOutputStream(myExtenalFile);;
                     fos.write(main_hash.getBytes());
                     fos.close();
 
