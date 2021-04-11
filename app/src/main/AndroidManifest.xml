@@ -14,25 +14,22 @@
         <activity android:name=".QuestionAnspage"></activity>
         <activity android:name=".AddQuestionPage" />
         <activity android:name=".MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-        </activity>
-
-        <activity
-            android:name=".openTxtActivity"
-            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:scheme="content" />
-<!--                <data android:scheme="file" />-->
+                <data android:scheme="file" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
+
         </activity>
     </application>
 

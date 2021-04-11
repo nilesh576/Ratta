@@ -85,7 +85,7 @@ public class ChapterRecViewAdapter extends RecyclerView.Adapter<ChapterRecViewAd
                 }
 
 
-                File myExtenalFile = new File((context. getExternalFilesDir("chapters")),chapter_to_be_shared+".txt");
+                File myExtenalFile = new File((context.getExternalFilesDir("chapters")),chapter_to_be_shared+".txt");
                 final  String path = myExtenalFile.getPath();
 
                 FileOutputStream fos = null;
@@ -105,9 +105,6 @@ public class ChapterRecViewAdapter extends RecyclerView.Adapter<ChapterRecViewAd
                     intent.setType("text/plain");
 
                     intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+myExternalFile2));
-
-                    //testing line, delete after testing
-//                    myExternalFile2.delete();
 
                     context.startActivity(Intent.createChooser(intent,"shareVia"));
 
@@ -223,7 +220,6 @@ public class ChapterRecViewAdapter extends RecyclerView.Adapter<ChapterRecViewAd
                             Toast.makeText(v.getContext(),""+chapter_to_be_rename+" has been renamed to "+editText.getText().toString(),Toast.LENGTH_SHORT).show();
                         }
                         catch (Exception e){
-                            dialog.dismiss();
                             Toast.makeText(v.getContext(),"invalid name ",Toast.LENGTH_SHORT).show();
                         }
 
