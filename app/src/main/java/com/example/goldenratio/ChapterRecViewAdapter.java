@@ -3,44 +3,22 @@ package com.example.goldenratio;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.net.Uri;
-import android.os.Environment;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
 
 
 public class ChapterRecViewAdapter extends RecyclerView.Adapter<ChapterRecViewAdapter.Viewholder>{
@@ -75,6 +53,7 @@ public class ChapterRecViewAdapter extends RecyclerView.Adapter<ChapterRecViewAd
         holder.chapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 DataBaseHelper db = new DataBaseHelper(context);
                 String chapter_to_be_shared = cards.get(position).getChapter_name();
 
@@ -100,7 +79,8 @@ public class ChapterRecViewAdapter extends RecyclerView.Adapter<ChapterRecViewAd
                 }
                 try{
                     File myExternalFile2 = new File(context.getExternalFilesDir("chapters"),chapter_to_be_shared+".txt");
-
+                    String x =  myExternalFile2.getAbsolutePath();
+                    Toast.makeText(context, x, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("text/plain");
 
@@ -111,7 +91,7 @@ public class ChapterRecViewAdapter extends RecyclerView.Adapter<ChapterRecViewAd
                 }catch (Exception e){
                     Toast.makeText(context, "something went wrong", Toast.LENGTH_SHORT).show();
                 }
-               
+
             }
         });
 

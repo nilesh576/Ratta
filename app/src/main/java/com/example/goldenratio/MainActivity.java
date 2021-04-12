@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,9 +25,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 public class MainActivity extends AppCompatActivity implements DailogAddNewChapter.DialogListner {
     private MenuItem item;
@@ -55,30 +68,63 @@ public class MainActivity extends AppCompatActivity implements DailogAddNewChapt
 
         if(action == "android.intent.action.VIEW"){
             String selectedFile = intent.getData().getPath();
-            String filename= selectedFile.substring(selectedFile.lastIndexOf("/")+1);
-            selectedFile = selectedFile.substring(selectedFile.lastIndexOf(":")+1);
+            File myFile;
+            InputStream fIn = null;
+
+            try {
+                selectedFile = selectedFile.substring(selectedFile.lastIndexOf("/storage"));
+                myFile = new File(selectedFile);
+                fIn = new FileInputStream( myFile );
+
+            }catch (Exception e){
+                //if file is opened from other apps rather than file explorer
+                Uri text_file_data_other_apps = (Uri) intent.getParcelableExtra(Intent.EXTRA_TEXT);
+                try {
+                    fIn = getContentResolver().openInputStream(text_file_data_other_apps);
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                }
+            }
 
 
             try {
-                File myFile = new File(selectedFile);
-                FileInputStream fIn = new FileInputStream( myFile );
                 BufferedReader myReader = new BufferedReader( new InputStreamReader(fIn));
-//                String aDataRow = "";
-//                String aBuffer = "";
+                String aDataRow = "";
+                String aBuffer = "";
 
-//                while ((aDataRow = myReader.readLine()) != null) {
-//                    aBuffer+= aDataRow + "\n";
-//                }
+                while ((aDataRow = myReader.readLine()) != null) {
+                    aBuffer+= aDataRow + "\n";
+                }
 
-//                Toast.makeText(this, aBuffer, Toast.LENGTH_SHORT).show();
+                String unHashed = hashTomsg(aBuffer,"questionShared");
+                String[] data = unHashed.split("---new---");
+                String chapter_name = unHashed.split("---new---")[0];
+                DataBaseHelper db = new DataBaseHelper(MainActivity.this);
+
+                try {
+
+                    db.AddTable(chapter_name,MainActivity.this);
+                }catch (Exception e){
+                    Toast.makeText(this, chapter_name+" already exits, rename or delete exitsing chapter", Toast.LENGTH_SHORT).show();
+                    db.close();
+                    return;
+                }
+
+                String[] question_info;
+                QuestionModel questionModel;
+                for(int i = 1; i<data.length;i++){
+                    question_info = data[i].split("-----");
+                    questionModel = new QuestionModel(question_info[0],question_info[1],question_info[2],question_info[3],question_info[4],Integer.parseInt(question_info[5]));
+                    db.add_question_to_table(chapter_name,questionModel);
+                }
+                db.close();
+                adapter.notifyDataSetChanged();
+                Toast.makeText(this, chapter_name+" chpater has been added to the book \n if already exitsted question would get mergerd", Toast.LENGTH_SHORT).show();
                 myReader.close();
-
-                Toast.makeText(this, filename, Toast.LENGTH_SHORT).show();
-                Toast.makeText(getBaseContext(),"Done reading file "+filename+" from sdcard",Toast.LENGTH_SHORT).show();}
-            catch (Exception e) {
-                Toast.makeText(getBaseContext(), e.getMessage()+"000000",Toast.LENGTH_SHORT).show();
             }
-
+            catch (Exception e) {
+                Toast.makeText(getBaseContext(), e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
         }
         
         
@@ -203,5 +249,27 @@ public class MainActivity extends AppCompatActivity implements DailogAddNewChapt
         boolean can = false;
         boolean sel = false;
     }
-
+    private String hashTomsg(String hash, String key) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+        if(hash==null){
+            hash = "";
+        }
+        if(key==null){
+            key = "";
+        }
+        SecretKeySpec secretKeySpec = generateKey(key);
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE,secretKeySpec);
+        byte[] decodedValue = Base64.decode(hash,Base64.DEFAULT);
+        byte[] decValue = cipher.doFinal(decodedValue);
+        String decrypted_msg = new String(decValue);
+        return decrypted_msg;
+    }
+    private SecretKeySpec generateKey(String passwaord) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        byte[] bytes = passwaord.getBytes("UTF-8");
+        messageDigest.update(bytes,0,bytes.length);
+        byte[] key = messageDigest.digest();
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key,"AES");
+        return  secretKeySpec;
+    }
 }
