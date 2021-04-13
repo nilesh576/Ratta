@@ -2,6 +2,7 @@ package com.example.goldenratio;
 
 import android.app.Dialog;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
@@ -32,16 +33,14 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class QuestionAnspage extends AppCompatActivity {
     Button backbtn,nextbtn,deletebtn,hash_share_btn;
+    Switch aSwitch;
     RadioGroup option_grp;
     RadioButton Arb,Brb,Crb,Drb;
+
     TextView questiontextview;
-    String table_name;
-    int offest_by;
-    Switch aSwitch;
-    String  ques;
-    String ans;
-    int back;
-    ClipboardManager clipboard;
+    int offest_by,back;
+    String  ques,ans,table_name;
+//    ClipboardManager clipboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +48,7 @@ public class QuestionAnspage extends AppCompatActivity {
         setContentView(R.layout.activity_question_anspage);
         offest_by = 0;
         back=0;
-        clipboard = (ClipboardManager) getSystemService(QuestionAnspage.this.CLIPBOARD_SERVICE);
+//        clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         aSwitch = findViewById(R.id.switch1);
         backbtn = findViewById(R.id.buttonback);
         nextbtn = findViewById(R.id.buttonnext);
@@ -67,6 +66,7 @@ public class QuestionAnspage extends AppCompatActivity {
 
         changeQuestion(offest_by);
 
+
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +74,7 @@ public class QuestionAnspage extends AppCompatActivity {
                     DataBaseHelper db = new DataBaseHelper(QuestionAnspage.this);
                     int size = db.getSize(table_name);
                     Random a = new Random();
+                    db.close();
                     offest_by =  a.nextInt(size);
                 }else{
                     offest_by--;
@@ -89,6 +90,7 @@ public class QuestionAnspage extends AppCompatActivity {
                     int size = db.getSize(table_name);
                     Random a = new Random();
                     offest_by =  a.nextInt(size);
+                    db.close();
                 }else{
                     offest_by++;
                 }
@@ -116,7 +118,7 @@ public class QuestionAnspage extends AppCompatActivity {
                         offest_by--;
                         changeQuestion(offest_by);
                         dialog.dismiss();
-                        Toast.makeText(v.getContext(),""+ques+" has been delete ",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(),ques+" has been deleted ",Toast.LENGTH_SHORT).show();
                     }
                 });
                 nobutton.setOnClickListener(new View.OnClickListener() {
@@ -126,9 +128,6 @@ public class QuestionAnspage extends AppCompatActivity {
                         return;
                     }
                 });
-
-
-
             }
         });
 
@@ -205,15 +204,12 @@ public class QuestionAnspage extends AppCompatActivity {
 //                clipboard.setPrimaryClip(clip);
 //                Toast.makeText(QuestionAnspage.this,"failed"+beforeCryption,Toast.LENGTH_SHORT).show();
                 ApplicationInfo api = getApplicationContext().getApplicationInfo();
-                String apkpath = api.sourceDir;
                 Intent intent = new Intent(Intent.ACTION_SEND);
 
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, encrypted);
                 startActivity(Intent.createChooser(intent,"shareVia"));
                 return;
-
-
             }
         });
     }

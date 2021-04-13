@@ -3,7 +3,6 @@ package com.example.goldenratio;
 public class ChapterCardsDetails {
     private String chapter_name;
     private int total_question;
-    private String description;
 
     public ChapterCardsDetails(String chapter_name, int total_question) {
         this.chapter_name = chapter_name;

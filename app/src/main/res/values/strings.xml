@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Ratta</string>
+    <string name="to_use_speech_to_text_long_press_on_text_area">to use speech to text, long press on text area</string>
+    <string name="select_correct_option">select correct option</string>
+    <string name="add">ADD</string>
+    <string name="type_hash">type hash</string>
 </resources>

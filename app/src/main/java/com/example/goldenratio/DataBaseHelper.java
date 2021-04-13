@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.EdgeEffect;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -54,19 +55,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public boolean AddTable(String table_name, Context context){
         SQLiteDatabase db = this.getWritableDatabase();
         table_name = table_name.replace(" ","");
-
-        if(table_name.equals("")||Character.isDigit((table_name.charAt(0)))){
-            db.close();
-            Toast.makeText(context, "Invalid Name \n chapter can't be added", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        else {
+        try {
             String CreateTableStatement = "create table if not exists "+table_name+" ( "+COLUMN_ID+" " + "INTEGER PRIMARY KEY AUTOINCREMENT, "+QUESTION+" TEXT, "+OPTION_A+" TEXT," + ""+OPTION_B+" TEXT, "+OPTION_C+" TEXT, "+OPTION_D+" TEXT, "+CORRECT_ANS+" INTEGER )";
             db.execSQL(CreateTableStatement);
             db.close();
             return true;
+        } catch (Exception e){
+            Toast.makeText(context, "Invalid Name \n chapter can't be added", Toast.LENGTH_SHORT).show();
         }
-
+        return false;
     }
 
     public ArrayList<ChapterCardsDetails> is_there_table(){
@@ -98,8 +95,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public void rename_table(String prv, String New){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL(    "ALTER TABLE "+ prv +" RENAME TO " + New +";");
-        db.close();
+
+        try{
+            db.execSQL(    "ALTER TABLE "+ prv +" RENAME TO " + New +";");
+            db.close();
+        }catch (Exception e){
+            db.close();
+            Toast.makeText(context, "invalid name", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void delete_row_in_table(String table, String row){
@@ -135,11 +139,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
        db.close();
         try {
             mainHash = msgToHash(mainHash,"questionShared");
-
-//            ClipData clip = ClipData.newPlainText("simple text", mainHash);
-//
-//            clipboard.setPrimaryClip(clip);
-//            Toast.makeText(context,"copied to clipboard",Toast.LENGTH_SHORT).show();
             return mainHash;
 
         } catch (Exception e){
@@ -170,10 +169,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void update_question(String table, int id, ContentValues cv){
-        SQLiteDatabase db = getWritableDatabase();
-//        db.update(table,cv,"ID = ","?");
-    }
 
     private String msgToHash(String msg, String key) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         if(key==null){
@@ -188,21 +183,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         byte[] encVal = cipher.doFinal(msg.getBytes());
         String hash = Base64.encodeToString(encVal,Base64.DEFAULT);
         return hash;
-    }
-    private String hashTomsg(String hash, String key) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        if(hash==null){
-            hash = "";
-        }
-        if(key==null){
-            key = "";
-        }
-        SecretKeySpec secretKeySpec = generateKey(key);
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE,secretKeySpec);
-        byte[] decodedValue = Base64.decode(hash,Base64.DEFAULT);
-        byte[] decValue = cipher.doFinal(decodedValue);
-        String decrypted_msg = new String(decValue);
-        return decrypted_msg;
     }
     private SecretKeySpec generateKey(String passwaord) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");

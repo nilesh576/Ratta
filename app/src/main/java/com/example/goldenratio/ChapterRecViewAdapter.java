@@ -233,7 +233,6 @@ public class ChapterRecViewAdapter extends RecyclerView.Adapter<ChapterRecViewAd
         private final TextView totalquestions;
         private final Button del;
         private final Button add;
-//        private final Button update;
         private final LinearLayout linearLayout;
 
         public Viewholder(@NonNull View itemView) {
@@ -242,7 +241,6 @@ public class ChapterRecViewAdapter extends RecyclerView.Adapter<ChapterRecViewAd
             totalquestions = itemView.findViewById(R.id.totalquestion);
             del =  itemView.findViewById(R.id.deleteques);
             add =  itemView.findViewById(R.id.addques);
-//            update = itemView.findViewById(R.id.updateChapNamebtn);
             linearLayout = itemView.findViewById(R.id.cardlayout);
         }
     }

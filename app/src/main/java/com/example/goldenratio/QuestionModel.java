@@ -10,16 +10,12 @@ public class QuestionModel {
     private int correctAns;
 
     public QuestionModel( String question, String optionA, String optionB, String optionC, String optionD, int correctAns) {
-        //this.id = id
         this.question = question;
         this.optionA = optionA;
         this.optionB = optionB;
         this.optionC = optionC;
         this.optionD = optionD;
         this.correctAns = correctAns;
-    }
-
-    public QuestionModel() {
     }
 
     @Override

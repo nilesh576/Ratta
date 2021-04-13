@@ -33,7 +33,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 public class AddQuestionPage extends AppCompatActivity {
-    Button btn;
+    Button add_ques_btn;
     EditText opt1,opt2,opt3,opt4,question,add_hash_et;
     RadioButton rb1,rb2,rb3,rb4,ans;
     RadioGroup rg1;
@@ -62,7 +62,7 @@ public class AddQuestionPage extends AppCompatActivity {
         rb2 = findViewById(R.id.radioButton2);
         rb3 = findViewById(R.id.radioButton3);
         rb4 = findViewById(R.id.radioButton4);
-        btn = findViewById(R.id.button);
+        add_ques_btn = findViewById(R.id.add_button);
         rg1 = findViewById(R.id.radiogroup);
 
         speechToText(question);
@@ -72,14 +72,13 @@ public class AddQuestionPage extends AppCompatActivity {
         speechToText(opt4);
 
         Intent n = getIntent();
-        btn.setOnClickListener(new View.OnClickListener() {
+        add_ques_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DataBaseHelper db = new DataBaseHelper(AddQuestionPage.this);
 
                 if(rg1.getCheckedRadioButtonId()==-1|| opt1.getText().toString().equals("") || opt2.getText().toString().equals("")|| opt3.getText().toString().equals("")|| opt4.getText().toString().equals("")){
                     Toast.makeText(AddQuestionPage.this,"input all data before submitting",Toast.LENGTH_SHORT).show();
-                    db.close();
                 }
                 else{
                     ans = findViewById(rg1.getCheckedRadioButtonId());
@@ -87,13 +86,10 @@ public class AddQuestionPage extends AppCompatActivity {
                     QuestionModel q = new QuestionModel(question.getText().toString(),opt1.getText().toString(),opt2.getText().toString(),opt3.getText().toString(),opt4.getText().toString(),correctAnswer);
 
                     db.add_question_to_table((String) n.getCharSequenceExtra("chaptername"),  q);
-                    Toast.makeText(AddQuestionPage.this,"Question has been added to the\n"+table,Toast.LENGTH_SHORT).show();
-
-
+                    Toast.makeText(AddQuestionPage.this,"Question has been added to the chapter\n"+table,Toast.LENGTH_SHORT).show();
                     MainActivity.change(db.is_there_table());
-                    db.close();
-//                    finish();
                 }
+                db.close();
             }
         });
 
@@ -145,21 +141,8 @@ public class AddQuestionPage extends AppCompatActivity {
                             }
                         }
                     }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (NoSuchPaddingException e) {
-                    e.printStackTrace();
-                } catch (InvalidKeyException e) {
-                    e.printStackTrace();
-                } catch (BadPaddingException e) {
-                    e.printStackTrace();
-                } catch (IllegalBlockSizeException e) {
-                    e.printStackTrace();
-                }
-                catch (Exception e){
-
+                } catch (Exception e){
+                    Toast.makeText(context, "can't determine this input", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -178,16 +161,14 @@ public class AddQuestionPage extends AppCompatActivity {
         cipher.init(Cipher.DECRYPT_MODE,secretKeySpec);
         byte[] decodedValue = Base64.decode(hash,Base64.DEFAULT);
         byte[] decValue = cipher.doFinal(decodedValue);
-        String decrypted_msg = new String(decValue);
-        return decrypted_msg;
+        return new String(decValue);
     }
     SecretKeySpec generateKey(String passwaord) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
         byte[] bytes = passwaord.getBytes("UTF-8");
         messageDigest.update(bytes,0,bytes.length);
         byte[] key = messageDigest.digest();
-        SecretKeySpec secretKeySpec = new SecretKeySpec(key,"AES");
-        return  secretKeySpec;
+        return new SecretKeySpec(key,"AES");
     }
 
     @Override
@@ -224,35 +205,13 @@ public class AddQuestionPage extends AppCompatActivity {
             int resultCode;
             @Override
             public boolean onLongClick(View v) {
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,"en-US");
                 try {
-                    int id = editText.getId();
-                    switch (id){
-                        case R.id.editTextTextPersonName:{
-                            resultCode = 10;
-                            break;
-                        }
-                        case R.id.editTextTextPersonName1:{
-                            resultCode = 11;
-                            break;
-                        }
-                        case R.id.editTextTextPersonName2:{
-                            resultCode = 12;
-                            break;
-                        }
-                        case R.id.editTextTextPersonName3:{
-                            resultCode = 13;
-                            break;
-                        }
-                        case R.id.editTextTextPersonName4:{
-                            resultCode = 14;
-                            break;
-                        }
-
-                    }
+                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,"en-US");
+                    resultCode = v.getId();
                     startActivityForResult(intent,resultCode);
+
                 }catch (Exception e){
                     Toast.makeText(context, "your device does not support this service", Toast.LENGTH_SHORT).show();
                 }
@@ -265,40 +224,42 @@ public class AddQuestionPage extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            if(data!=null){
+            if(data != null){
+                String spoken_text;
+                ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
                 switch (requestCode){
-                    case 10:{
-                        question.setText(question.getText().toString()+text.get(0));
+                    case R.id.editTextTextPersonName:{
+                        spoken_text = question.getText().toString()+" "+text.get(0);
+                        question.setText(spoken_text);
                         break;
                     }
-                    case 11:{
-                        opt1.setText(opt1.getText().toString()+text.get(0));
+                    case R.id.editTextTextPersonName1:{
+                        spoken_text = opt1.getText().toString()+" "+text.get(0);
+                        opt1.setText(spoken_text);
                         break;
                     }
-                    case 12:{
-                        opt2.setText(opt2.getText().toString()+text.get(0));
+                    case R.id.editTextTextPersonName2:{
+                        spoken_text = opt2.getText().toString()+" "+text.get(0);
+                        opt2.setText(spoken_text);
                         break;
                     }
-                    case 13:{
-                        opt3.setText(opt3.getText().toString()+text.get(0));
+                    case R.id.editTextTextPersonName3:{
+                        spoken_text = opt3.getText().toString()+" "+text.get(0);
+                        opt3.setText(spoken_text);
                         break;
                     }
-                    case 14:{
-                        opt4.setText(opt4.getText().toString()+text.get(0));
+                    case R.id.editTextTextPersonName4:{
+                        spoken_text = opt4.getText().toString()+" "+text.get(0);
+                        opt4.setText(spoken_text);
                         break;
                     }
                 }
             }
         }
         catch (Exception e){
-
+            //
         }
-
-
-    }
-
-    public static void addQuestion(String hash){
 
     }
 }
