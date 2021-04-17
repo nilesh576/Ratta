@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="50dp"
     android:background="@drawable/buttons_on_rec_view">
 
 
     <EditText
-        android:layout_gravity="center"
         android:id="@+id/dailog_chapter_name"
-        android:layout_marginHorizontal="50dp"
-        android:layout_marginVertical="20dp"
         android:paddingHorizontal="10dp"
-        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:focusable="true"
         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_"
         android:hint="Chapter Name" />
     <Button
@@ -23,6 +21,6 @@
         android:layout_gravity="center"
         android:text="add"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

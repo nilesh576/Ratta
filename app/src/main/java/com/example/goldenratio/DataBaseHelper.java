@@ -56,7 +56,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         table_name = table_name.replace(" ","");
         try {
-            String CreateTableStatement = "create table if not exists "+table_name+" ( "+COLUMN_ID+" " + "INTEGER PRIMARY KEY AUTOINCREMENT, "+QUESTION+" TEXT, "+OPTION_A+" TEXT," + ""+OPTION_B+" TEXT, "+OPTION_C+" TEXT, "+OPTION_D+" TEXT, "+CORRECT_ANS+" INTEGER )";
+            String CreateTableStatement = "create table if not exists "+table_name+" ( "+COLUMN_ID+" " + "INTEGER PRIMARY KEY AUTOINCREMENT, "+QUESTION+" TEXT UNIQUE, "+OPTION_A+" TEXT," + ""+OPTION_B+" TEXT, "+OPTION_C+" TEXT, "+OPTION_D+" TEXT, "+CORRECT_ANS+" INTEGER )";
             db.execSQL(CreateTableStatement);
             db.close();
             return true;

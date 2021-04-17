@@ -175,7 +175,7 @@ public class AddQuestionPage extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode== KeyEvent.KEYCODE_BACK){
             if (back == 0) {
-                CountDownTimer countDownTimer = new CountDownTimer(1000,200) {
+                CountDownTimer countDownTimer = new CountDownTimer(1000,1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         back = 1;

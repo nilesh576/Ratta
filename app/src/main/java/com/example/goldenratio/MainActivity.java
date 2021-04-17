@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         contextMain = MainActivity.this;
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE );
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE );
         // very very important
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());        
@@ -84,12 +84,13 @@ public class MainActivity extends AppCompatActivity {
 
             }catch (Exception e){
                 //if file is opened from other apps rather than file explorer
-                Uri text_file_data_other_apps = (Uri) intent.getParcelableExtra(Intent.EXTRA_TEXT);
-                try {
-                    fIn = getContentResolver().openInputStream(text_file_data_other_apps);
-                } catch (FileNotFoundException fileNotFoundException) {
-                    fileNotFoundException.printStackTrace();
-                }
+//                Uri text_file_data_other_apps = (Uri) intent.getParcelableExtra(Intent.EXTRA_TEXT);
+//                try {
+//                    fIn = getContentResolver().openInputStream(text_file_data_other_apps);
+//                } catch (FileNotFoundException fileNotFoundException) {
+//                    fileNotFoundException.printStackTrace();
+//                }
+                Toast.makeText(contextMain, intent.getPackage()+" s", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -102,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
                     aBuffer+= aDataRow + "\n";
                 }
                 myReader.close();
-
                 String unHashed = hashTomsg(aBuffer,"questionShared");
                 String[] data = unHashed.split("---new---");
                 String chapter_name = unHashed.split("---new---")[0];
@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
                         String chapter_name_to_be_add = dialog_editText_chap_name.getText().toString();
                         DataBaseHelper db = new DataBaseHelper(contextMain);
                         db.AddTable(chapter_name_to_be_add,contextMain);
+                        adapter.setCards(db.is_there_table());
                         db.close();
                         dialog.dismiss();
                     }
